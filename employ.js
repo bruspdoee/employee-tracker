@@ -36,17 +36,14 @@ async function determineAction() {
         case 'View all employees': //ok
             viewAll();
             break;
+        case 'View employees by department':
+            viewByDpt();
+            break;
         case 'Update employee role': //ok
             updateRole();
             break;
-        case 'View all roles':
-            viewAllRoles(); //ok
-            break;
         case "Add role":
             addRole(); //ok
-            break;
-        case 'View all departments':
-            viewAllDpt(); //ok
             break;
         case 'Add department':
             addDpt(); //ok
@@ -126,22 +123,6 @@ function addEmployee() {
 
 function viewAll() {
     connection.query("SELECT first_name AS FirstName , last_name as LastName , role.title as Role, role.salary AS Salary, department.name AS Department FROM employee INNER JOIN department ON department.id = employee.role_id left JOIN role ON role.id = employee.role_id", function (err, results) {
-        console.table(results);
-        if (err) throw err;
-        determineAction()
-    });
-}
-
-function viewAllDpt() {
-    connection.query("SELECT name AS Departments FROM department ", function (err, results) {
-        console.table(results);
-        if (err) throw err;
-        determineAction()
-    });
-}
-
-function viewAllRoles() {
-    connection.query("Select title as Roles from role ", function (err, results) {
         console.table(results);
         if (err) throw err;
         determineAction()
@@ -242,6 +223,73 @@ function addRole() {
         })
     })
 }
+
+
+
+// function viewByDpt() {
+
+
+//     const qrydepatment = "SELECT *FROM department"
+//     const employeeQuery = "SELECT *FROM employee"
+//     connection.query(qrydepatment, function (err, department) {
+//         connection.query(employeeQuery, function (err, employee) {
+
+//             if (err) throw err
+
+//             inquirer.prompt([
+
+//                 {
+//                     name: "choices",
+//                     type: "list",
+//                     message: "Which department would like to get results from?",
+//                     choices: function () {
+//                         var arrayOfChoices = [];
+//                         for (var i = 0; i < department.length; i++) {
+//                             arrayOfChoices.push(department[i].name);
+//                         }
+//                         return arrayOfChoices;
+//                     },
+//                 }
+//             ]).then(function (res) {
+
+//                 // for (var i = 0; i < employee.length; i++) {
+//                 //     if (employee[i].role_id === res.results) {
+//                 //         res.department_id = results[i].id;
+//                 //     }
+
+//                 const query = "SELECT employee.first_name AS FirstName, employee.last_name fROM employee WHERE?"
+//                 var values = { name: res.choices }
+//                 console.log(values)
+//                 var query2 = connection.query(query, values, function (err, results) {
+
+
+//                     console.table(results)
+//                     console.log(query2 + "----------------------")
+//                     if (err) throw err
+//                 })
+
+
+//             })
+//         })
+//     })
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function updateRole() {
     //selecting all columns for department so I can further loop over and get the department ID
