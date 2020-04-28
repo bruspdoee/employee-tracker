@@ -50,7 +50,9 @@ async function determineAction() {
         case 'Add department':
             addDpt();
             break;
-
+        case 'View all departments':
+            viewAllDpt(); 
+            break;
         default:
             connection.end();
             break;
@@ -133,14 +135,11 @@ function viewAll() {
 
 
 function addDpt() {
-    inquirer
-        .prompt({
+    inquirer.prompt({
             name: "newDpt",
             type: "input",
             message: "Which Department would you like to add?"
-        })
-        .then(function (result) {
-
+        }).then(function (result) {
 
             var query = "INSERT INTO department SET?"
             console.log(query)
@@ -152,6 +151,14 @@ function addDpt() {
 
 
         })
+}
+
+function viewAllDpt() {
+    connection.query("SELECT name AS Departments FROM department ", function (err, results) {
+        console.table(results);
+        if (err) throw err;
+        determineAction()
+    });
 }
 
 function addRole() {
