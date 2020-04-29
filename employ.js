@@ -1,21 +1,18 @@
 //Packages 
 const inquirer = require("inquirer");
 const mysql = require("mysql");
-const questions = require("./questions");
+const questions = require("./actions");
 const consoleTable = require('console.table');
 
 //setting up the connection with the DB
 const connection = mysql.createConnection({
     host: "localhost",
-    // Your port; if not 3306
     port: 3306,
 
-    // Your username
     user: "root",
 
-    // Your password
     password: "Itsbrus16!",
-    database: "employee_track_DB"
+    database: "employee_track_db"
 });
 
 connection.connect(function (err) {
@@ -29,7 +26,7 @@ async function determineAction() {
 
     const results = await inquirer.prompt(questions.actions);
     switch (results.actions) {
-        case 'Add new employee':
+        case 'Add new employee': 
             addEmployee();
             break;
         case 'View all employees':
@@ -41,18 +38,19 @@ async function determineAction() {
         case 'Update employee role':
             updateRole();
             break;
-        case "Add role":
-            addRole(); 
-            break;
         case 'View all roles':
             viewAllRoles();
             break;
-        case 'Add department':
-            addDpt();
+        case "Add role":
+            addRole(); 
             break;
         case 'View all departments':
             viewAllDpt(); 
             break;
+        case 'Add department':
+            addDpt(); 
+            break;
+
         default:
             connection.end();
             break;
@@ -110,59 +108,60 @@ function addEmployee() {
                 first_name: res.firstname,
                 last_name: res.lastname,
                 role_id: res.role_id
-                // manager_id: employee(id)
             }
             connection.query(query, VALUES, function (err) {
                 if (err) throw err;
                 console.log("Employee successfully added!");
-                determineAction()
             }
-
             )
         })
     })
 
 }
 
+// function viewAll() {
+//     connection.query("", function (err, results) {
+//         console.table(results);
+//         if (err) throw err;
+//     });
+// }
 
-function viewAll() {
-    connection.query("SELECT first_name AS FirstName , last_name as LastName , role.title as Role, role.salary AS Salary, department.name AS Department FROM employee INNER JOIN department ON department.id = employee.role_id left JOIN role ON role.id = employee.role_id", function (err, results) {
+function viewAllDpt() {
+    connection.query("SELECT * FROM employee_track_db.department", function (err, results) {
         console.table(results);
         if (err) throw err;
-        determineAction()
     });
 }
 
+// function viewAllRoles() {
+//     connection.query("Select title as Roles from role ", function (err, results) {
+//         console.table(results);
+//         if (err) throw err;
+//     });
+// }
+
 
 function addDpt() {
-    inquirer.prompt({
+    inquirer
+        .prompt({
             name: "newDpt",
             type: "input",
             message: "Which Department would you like to add?"
-        }).then(function (result) {
+        })
+        .then(function (result) {
 
             var query = "INSERT INTO department SET?"
             console.log(query)
             var query1 = connection.query(query, [{ name: result.newDpt }], function (err) {
                 if (err) throw err;
                 console.table("Department Created Successfully!");
-                determineAction()
             });
 
 
         })
 }
 
-function viewAllDpt() {
-    connection.query("SELECT name AS Departments FROM department ", function (err, results) {
-        console.table(results);
-        if (err) throw err;
-        determineAction()
-    });
-}
-
 function addRole() {
-    //selecting all columns for department so I can further loop over and get the department ID
     var roleQuery = "SELECT * FROM role;";
     var departmentQuery = "SELECT * FROM department;";
 
@@ -225,7 +224,6 @@ function addRole() {
                 connection.query(query, VALUES, function (err) {
                     if (err) throw err;
                     console.table("Role Successfuly created!");
-                    determineAction()
                 });
 
             })
@@ -233,16 +231,8 @@ function addRole() {
     })
 }
 
-function viewAllRoles() {
-    connection.query("Select title as Roles from role ", function (err, results) {
-        console.table(results);
-        if (err) throw err;
-        determineAction()
-    });
-}
 
 function updateRole() {
-    //selecting all columns for department so I can further loop over and get the department ID
     var roleQuery = "SELECT * FROM role;";
     var departmentQuery = "SELECT * FROM department;";
 
@@ -301,7 +291,6 @@ function updateRole() {
                 let query1 = connection.query(query, VALUES, function (err) {
                     if (err) throw err;
                     console.table("Role Successfuly Updated!");
-                    determineAction()
                 });
 
             })
