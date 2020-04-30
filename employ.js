@@ -92,7 +92,7 @@ function addEmployee() {
             {
                 type: "input",
                 name: "emanager",
-                message: "What is the employee's manager?"
+                message: "Who is the employee's manager?"
             }
 
         ]).then(function (res) {
@@ -119,26 +119,26 @@ function addEmployee() {
 
 }
 
-// function viewAll() {
-//     connection.query("", function (err, results) {
-//         console.table(results);
-//         if (err) throw err;
-//     });
-// }
-
-function viewAllDpt() {
-    connection.query("SELECT * FROM employee_track_db.department", function (err, results) {
+function viewAll() {
+    connection.query("SELECT * FROM employee_track_db.employee;", function (err, results) {
         console.table(results);
         if (err) throw err;
     });
 }
 
-// function viewAllRoles() {
-//     connection.query("Select title as Roles from role ", function (err, results) {
-//         console.table(results);
-//         if (err) throw err;
-//     });
-// }
+function viewAllDpt() {
+    connection.query("SELECT DISTINCT department FROM employee_track_db.department", function (err, results) {
+        console.table(results);
+        if (err) throw err;
+    });
+}
+
+function viewAllRoles() {
+    connection.query("SELECT DISTINCT title FROM employee_track_db.role;", function (err, results) {
+        console.table(results);
+        if (err) throw err;
+    });
+}
 
 
 function addDpt() {
